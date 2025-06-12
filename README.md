@@ -16,7 +16,7 @@ A lightweight macOS utility that monitors login attempts and triggers custom scr
 
 ```bash
 # Install from the tap
-brew install yourusername/tap/loginwatcher
+brew install ramanaraj7/tap/loginwatcher
 
 # Start the service (runs in background)
 brew services start loginwatcher
@@ -26,7 +26,7 @@ brew services start loginwatcher
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/loginwatcher.git
+   git clone https://github.com/ramanaraj7/loginwatcher.git
    cd loginwatcher
    ```
 
