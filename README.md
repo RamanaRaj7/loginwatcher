@@ -101,6 +101,31 @@ echo "[$(date)] Login FAILED via $AUTH_METHOD" >> ~/.login_events.log
 # - Play a sound
 ```
 
+### Running Python Scripts
+
+You can run Python scripts from your login handlers by specifying the full path to the Python interpreter:
+
+```bash
+#!/bin/bash
+/opt/homebrew/opt/python@3.11/bin/python3.11 /Users/username/example.py
+```
+
+**Important:** Some Python packages require accessibility permissions to function properly. To enable this:
+
+1. Go to System Settings > Privacy & Security > Accessibility
+2. Add the Python interpreter, Terminal and loginwatcher (path: /opt/homebrew/Cellar/loginwatcher/1.0.0/bin/loginwatcher) in application to the list of allowed apps
+
+### Running Shell Scripts
+
+You can also call other shell scripts from your login handlers:
+
+```bash
+#!/bin/bash
+~/example.sh
+```
+
+Make sure any called scripts are also executable (`chmod +x ~/example.sh`).
+
 ## Command Line Options
 
 ```
