@@ -1,5 +1,7 @@
 # LoginWatcher
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/RamanaRaj7/loginwatcher)
+
 A lightweight macOS utility that monitors login attempts and triggers custom scripts on successful or failed authentication events.
 
 ## Features
