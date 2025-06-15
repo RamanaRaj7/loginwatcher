@@ -1,7 +1,7 @@
 class Loginwatcher < Formula
   desc "Monitor macOS login attempts and trigger scripts on success/failure"
   homepage "https://github.com/RamanaRaj7/loginwatcher"
-  url "https://github.com/RamanaRaj7/loginwatcher/archive/refs/tags/v1.0.1.tar.gz"
+  url "https://github.com/RamanaRaj7/loginwatcher/archive/refs/tags/v1.0.2.tar.gz"
   sha256 "5c9aabdd9bd00ae730b5393324da8d963563c4c1689c65c282ba18545403c8ac"
   license "MIT"
 
@@ -34,6 +34,22 @@ class Loginwatcher < Formula
         AUTH_USER - your username
         AUTH_RESULT - "SUCCESS" or "FAILED" 
         AUTH_METHOD - "TouchID" or "Password"
+        TOTAL_FAILURES - Total number of failures
+        TOUCHID_FAILURES - Number of TouchID failures
+        PASSWORD_FAILURES - Number of password failures
+        
+      Advanced Configuration:
+        In ~/.login_failure, you can specify scripts with different behaviors:
+        - Default (first failure only): ~/script.sh
+        - Run after specific counts: ~/script.sh {method:count,...}
+        - Run on every failure: ~/script.sh {everytime}
+        
+        Examples:
+          ~/notify.sh                  # first failure only
+          ~/log.sh {everytime}         # every failure
+          ~/alert.sh {total:3}         # after 3 total failures
+          ~/take_photo.sh {touchid:5}  # after 5 TouchID failures
+          ~/send_email.sh {password:3} # after 3 password failures
 
       To run loginwatcher now and on login:
         brew services start loginwatcher

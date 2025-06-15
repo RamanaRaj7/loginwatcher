@@ -72,6 +72,9 @@ The following environment variables are passed to your scripts:
 - `AUTH_USER` - Your macOS username
 - `AUTH_RESULT` - Either "SUCCESS" or "FAILED"
 - `AUTH_METHOD` - Either "TouchID" or "Password"
+- `TOTAL_FAILURES` - Total number of authentication failures since last success
+- `TOUCHID_FAILURES` - Number of TouchID failures since last success
+- `PASSWORD_FAILURES` - Number of password failures since last success
 
 ### Example Scripts
 
@@ -95,13 +98,64 @@ echo "[$(date)] Login SUCCESS via $AUTH_METHOD" >> ~/.login_events.log
 #!/bin/bash
 
 # Log the failed login attempt
-echo "[$(date)] Login FAILED via $AUTH_METHOD" >> ~/.login_events.log
+echo "[$(date)] Login FAILED via $AUTH_METHOD (Total: $TOTAL_FAILURES)" >> ~/.login_events.log
 
 # Other actions you might want to perform on failed login:
 # - Send alerts
 # - Take a screenshot or webcam photo
 # - Play a sound
 ```
+
+### Advanced: Conditional Script Execution Based on Failure Count
+
+You can configure scripts to run only after specific failure thresholds are met. This is useful for implementing escalating responses to repeated login failures.
+
+Add script configurations to your `~/.login_failure` file using one of these formats:
+
+1. **Default (runs on first failure only):**
+   ```
+   ~/example.sh
+   ```
+
+2. **Run after specific failure counts:**
+   ```
+   ~/example.sh {method:count,method2:count2}
+   ```
+
+3. **Run on every failure:**
+   ```
+   ~/example.sh {everytime}
+   ```
+
+For example:
+
+```bash
+# Runs only on the first failure
+~/notify.sh
+
+# Runs on every failed login attempt
+~/log_attempt.sh {everytime}
+
+# Send notification after 2 total failures
+~/notify.sh {total:2}
+
+# Take screenshot after 3 password failures
+~/take_photo.sh {password:3}
+
+# Send email alert after 5 TouchID failures
+~/send_email.sh {touchid:5}
+
+# Multiple triggers for one script
+~/alert.sh {total:3,touchid:2,password:4}
+```
+
+Available methods:
+- `everytime` - Execute on every failed login attempt
+- `total` - Total failures across both authentication methods
+- `touchid` - TouchID-specific failures
+- `password` - Password-specific failures
+
+Each script will run exactly once when its threshold is reached (except for `everytime` scripts). All counters reset upon successful authentication.
 
 ### Running Python Scripts
 
@@ -115,7 +169,7 @@ You can run Python scripts from your login handlers by specifying the full path 
 **Important:** Some Python packages require accessibility permissions to function properly. To enable this:
 
 1. Go to System Settings > Privacy & Security > Accessibility
-2. Add the Python interpreter, Terminal and loginwatcher (path: /opt/homebrew/Cellar/loginwatcher/1.0.1/bin/loginwatcher) in application to the list of allowed apps
+2. Add the Python interpreter, Terminal and loginwatcher (path: /opt/homebrew/Cellar/loginwatcher/1.0.2/bin/loginwatcher) in application to the list of allowed apps
 
 ### Running Shell Scripts
 
@@ -135,12 +189,8 @@ Usage: loginwatcher [options]
 
 Options:
   --version     Print version information and exit
-  --logs        Show logs from running loginwatcher instance
-  --start       Start loginwatcher daemon (use brew services instead when possible)
   --help        Print this help message and exit
 ```
-
-When run without arguments, loginwatcher will display usage information and service management instructions.
 
 ## Requirements
 
