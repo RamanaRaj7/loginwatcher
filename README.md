@@ -115,7 +115,7 @@ You can run Python scripts from your login handlers by specifying the full path 
 **Important:** Some Python packages require accessibility permissions to function properly. To enable this:
 
 1. Go to System Settings > Privacy & Security > Accessibility
-2. Add the Python interpreter, Terminal and loginwatcher (path: /opt/homebrew/Cellar/loginwatcher/1.0.0/bin/loginwatcher) in application to the list of allowed apps
+2. Add the Python interpreter, Terminal and loginwatcher (path: /opt/homebrew/Cellar/loginwatcher/1.0.1/bin/loginwatcher) in application to the list of allowed apps
 
 ### Running Shell Scripts
 
@@ -135,8 +135,12 @@ Usage: loginwatcher [options]
 
 Options:
   --version     Print version information and exit
+  --logs        Show logs from running loginwatcher instance
+  --start       Start loginwatcher daemon (use brew services instead when possible)
   --help        Print this help message and exit
 ```
+
+When run without arguments, loginwatcher will display usage information and service management instructions.
 
 ## Requirements
 

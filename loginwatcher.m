@@ -3,7 +3,7 @@
 #import <CoreGraphics/CoreGraphics.h>
 
 // Version information
-#define LOGINWATCHER_VERSION "1.0.0"
+#define LOGINWATCHER_VERSION "1.0.1"
 
 // MARK: - Global State
 BOOL isScreenLocked = NO;
@@ -24,6 +24,8 @@ void stopAuthMonitoring(void);
 BOOL checkIfScreenIsLocked(void);
 void printVersion(void);
 void printUsage(void);
+void showLogs(void);
+BOOL isAlreadyRunning(void);
 
 // MARK: - Timestamp Formatter
 NSString* getUTCTimestamp() {
@@ -262,6 +264,42 @@ void stopAuthMonitoring() {
     logPipe = nil;
 }
 
+// MARK: - Check if loginwatcher is already running
+BOOL isAlreadyRunning() {
+    NSTask *task = [[NSTask alloc] init];
+    [task setLaunchPath:@"/bin/sh"];
+    [task setArguments:@[@"-c", @"pgrep -f loginwatcher | grep -v $$ | wc -l"]];
+    
+    NSPipe *pipe = [NSPipe pipe];
+    [task setStandardOutput:pipe];
+    
+    NSFileHandle *file = [pipe fileHandleForReading];
+    
+    [task launch];
+    
+    NSData *data = [file readDataToEndOfFile];
+    [file closeFile];
+    
+    NSString *output = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    int count = [output intValue];
+    
+    // If count > 0, then there's another instance running
+    return count > 0;
+}
+
+// MARK: - Show logs of running instance
+void showLogs() {
+    printf("Showing logs from running loginwatcher instance...\n");
+    printf("Press Ctrl+C to exit\n\n");
+    
+    NSTask *task = [[NSTask alloc] init];
+    [task setLaunchPath:@"/usr/bin/log"];
+    [task setArguments:@[@"stream", @"--predicate", @"process == \"loginwatcher\""]];
+    
+    [task launch];
+    [task waitUntilExit];
+}
+
 // MARK: - Version and Usage
 void printVersion() {
     printf("loginwatcher version %s\n", LOGINWATCHER_VERSION);
@@ -271,6 +309,8 @@ void printUsage() {
     printf("Usage: loginwatcher [options]\n\n");
     printf("Options:\n");
     printf("  --version     Print version information and exit\n");
+    printf("  --logs        Show logs from running loginwatcher instance\n");
+    printf("  --start       Start loginwatcher daemon (use brew services instead when possible)\n");
     printf("  --help        Print this help message and exit\n\n");
     printf("Description:\n");
     printf("  loginwatcher monitors macOS login attempts and executes scripts\n");
@@ -297,11 +337,34 @@ int main(int argc, const char * argv[]) {
             } else if ([arg isEqualToString:@"--help"]) {
                 printUsage();
                 return 0;
+            } else if ([arg isEqualToString:@"--logs"]) {
+                showLogs();
+                return 0;
+            } else if ([arg isEqualToString:@"--start"]) {
+                // Only --start will actually run the daemon
+                if (isAlreadyRunning()) {
+                    fprintf(stderr, "loginwatcher is already running. Use --logs to view logs.\n");
+                    return 1;
+                }
             } else {
                 fprintf(stderr, "Unknown option: %s\n", argv[1]);
                 printUsage();
                 return 1;
             }
+        } else {
+            // When run with no arguments, display help and service info
+            printf("loginwatcher version %s\n\n", LOGINWATCHER_VERSION);
+            printf("USAGE:\n");
+            printf("  To view logs from running instance:   loginwatcher --logs\n");
+            printf("  To start manually (not recommended):  loginwatcher --start\n\n");
+            printf("RECOMMENDED:\n");
+            printf("  Use Homebrew services to manage loginwatcher:\n");
+            printf("  - Start service:    brew services start loginwatcher\n");
+            printf("  - Stop service:     brew services stop loginwatcher\n");
+            printf("  - Restart service:  brew services restart loginwatcher\n");
+            printf("  - Check status:     brew services info loginwatcher\n\n");
+            printf("For more help: loginwatcher --help\n");
+            return 0;
         }
         
         NSLog(@"SYSTEM | Loginwatcher v%s starting up", LOGINWATCHER_VERSION);
