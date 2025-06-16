@@ -53,10 +53,12 @@ brew services start loginwatcher
 
 ### Setting Up Scripts
 
-Create executable scripts in your home directory:
+Create executable scripts in your home directory (to access this run 'nano ~/.filename'):
 
 1. `~/.login_success` - Executed when login succeeds (via TouchID or password)
 2. `~/.login_failure` - Executed when login fails (via TouchID or password)
+3.`'~/.sleep`         - Executed when system goes to sleep
+4. `~/.wakeup`        - Executed when system wakes from sleep
 
 Make sure both scripts are executable:
 
@@ -68,8 +70,6 @@ chmod +x ~/.login_success ~/.login_failure
 
 The following environment variables are passed to your scripts:
 
-- `AUTH_TIMESTAMP` - UTC timestamp of the authentication event
-- `AUTH_USER` - Your macOS username
 - `AUTH_RESULT` - Either "SUCCESS" or "FAILED"
 - `AUTH_METHOD` - Either "TouchID" or "Password"
 - `TOTAL_FAILURES` - Total number of authentication failures since last success
@@ -169,7 +169,7 @@ You can run Python scripts from your login handlers by specifying the full path 
 **Important:** Some Python packages require accessibility permissions to function properly. To enable this:
 
 1. Go to System Settings > Privacy & Security > Accessibility
-2. Add the Python interpreter, Terminal and loginwatcher (path: /opt/homebrew/Cellar/loginwatcher/1.0.3/bin/loginwatcher) in application to the list of allowed apps
+2. Add the Python interpreter, Terminal and loginwatcher (path: /opt/homebrew/Cellar/loginwatcher/1.0.4/bin/loginwatcher) in application to the list of allowed apps
 
 ### Running Shell Scripts
 
@@ -190,6 +190,9 @@ Usage: loginwatcher [options]
 Options:
   --version     Print version information and exit
   --help        Print this help message and exit
+  --setup       Create example configuration files and scripts
+  --config      Configure which scripts are enabled
+  --monitor     Start monitoring for authentication events
 ```
 
 ## Requirements
@@ -204,4 +207,10 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 This utility requires monitoring system logs which may contain sensitive information. All processing is done locally on your machine, and no data is sent to external servers.
 
-To allow log access, you may need to grant Full Disk Access to the Terminal or application that launches loginwatcher. 
+To allow log access, you may need to grant Full Disk Access to the Terminal or application that launches loginwatcher.
+
+## Technical Notes
+
+- LoginWatcher implements proper resource management to prevent file descriptor leaks
+- Signal handlers ensure graceful termination when interrupted
+- System resources are properly cleaned up in all termination scenarios 
