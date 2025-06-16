@@ -57,7 +57,7 @@ Create executable scripts in your home directory (to access this run 'nano ~/.fi
 
 1. `~/.login_success` - Executed when login succeeds (via TouchID or password)
 2. `~/.login_failure` - Executed when login fails (via TouchID or password)
-3.`'~/.sleep`         - Executed when system goes to sleep
+3. `~/.sleep`         - Executed when system goes to sleep
 4. `~/.wakeup`        - Executed when system wakes from sleep
 
 Make sure both scripts are executable:
