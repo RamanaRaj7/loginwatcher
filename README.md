@@ -208,9 +208,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 This utility requires monitoring system logs which may contain sensitive information. All processing is done locally on your machine, and no data is sent to external servers.
 
 To allow log access, you may need to grant Full Disk Access to the Terminal or application that launches loginwatcher.
-
-## Technical Notes
-
-- LoginWatcher implements proper resource management to prevent file descriptor leaks
-- Signal handlers ensure graceful termination when interrupted
-- System resources are properly cleaned up in all termination scenarios 
