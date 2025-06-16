@@ -626,7 +626,7 @@ void printVersion() {
 }
 
 void printUsage() {
-    printf("\nloginwatcher - version 1.0.2\n\n");
+    printf("\nloginwatcher - version 1.0.3\n\n");
     printf("Description:\n");
     printf("  loginwatcher monitors macOS login attempts and executes scripts\n");
     printf("  on successful or failed authentication attempts.\n\n");

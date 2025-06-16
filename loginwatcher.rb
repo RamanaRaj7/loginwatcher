@@ -1,7 +1,7 @@
 class Loginwatcher < Formula
   desc "Monitor macOS login attempts and trigger scripts on success/failure"
   homepage "https://github.com/RamanaRaj7/loginwatcher"
-  url "https://github.com/RamanaRaj7/loginwatcher/archive/refs/tags/v1.0.2.tar.gz"
+  url "https://github.com/RamanaRaj7/loginwatcher/archive/refs/tags/v1.0.3.tar.gz"
   sha256 "20372f640b57b374d1884e424d086e36e0171f9411c38da3572df69fdba9ccf9"
   license "MIT"
 
@@ -17,7 +17,7 @@ class Loginwatcher < Formula
   end
 
   service do
-    run opt_bin/"loginwatcher"
+    run [opt_bin/"loginwatcher", "--monitor"]
     keep_alive true
     log_path var/"log/loginwatcher.log"
     error_log_path var/"log/loginwatcher.log"
