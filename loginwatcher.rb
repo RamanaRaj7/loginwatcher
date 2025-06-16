@@ -2,7 +2,7 @@ class Loginwatcher < Formula
   desc "Monitor macOS login attempts and trigger scripts on success/failure"
   homepage "https://github.com/RamanaRaj7/loginwatcher"
   url "https://github.com/RamanaRaj7/loginwatcher/archive/refs/tags/v1.0.4.tar.gz"
-  sha256 "35d0c43ff7fa8d896ceb73b97464222e61a27b242ed89e341cd7f79fd5343033"
+  sha256 "78d408ed4cb05475c82131bbb52c2674155b42ef7e3dbaa0f78460e46050567e"
   license "MIT"
 
   depends_on :macos 
