@@ -2,6 +2,8 @@
 
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/RamanaRaj7/loginwatcher)
 
+if you find it intresting a ⭐️ on GitHub would mean a lot!
+
 A lightweight macOS utility that monitors login attempts and triggers custom scripts on successful or failed authentication events and sleep and wake up events too like sleepwatcher.
 
 ## Features
